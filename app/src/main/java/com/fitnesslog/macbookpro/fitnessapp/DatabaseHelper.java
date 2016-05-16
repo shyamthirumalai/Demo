@@ -23,8 +23,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     //Create - TABLE FITNESS_MEASURES
     public static final String DATABASE_NAME ="Fitness_DB";
     public static final String TABLE_NAME ="Fitness_Measures";
-    public static final String COL_1 ="FitnessMeasures_Id";
-    public static final String COL_2="FitnessMeasuresName";
+    public static final String FM_ID ="FitnessMeasures_Id";
+    public static final String FM_MEASURE_NAME="FitnessMeasuresName";
+    public static final String FM_DESC="Description";
+    public static final String FM_MIN_VAL="MinVal";
+    public static final String FM_MAX_VAL="MaxVal";
     public String ActiveUser = "";
 
     //Create - TABLE SAVEFITTNESMEASURES
@@ -45,14 +48,62 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     //Create - TABLE USER
     public static final String TABLE_NAME3 ="User";
     public static final String COL_ID="ID";
-    public static final String COL_Name="userName";
-    public static final String COL_password ="Password";
+//    public static final String COL_Name="userName";
+//    public static final String COL_password ="Password";
     public static final String COL_DOB ="DOB";
     public static final String COL_Phone="Phone";
     public static final String COL_Email="Email";
 
+    //Create - TABLE CLIENT
+    public static final String TABLE_CLIENT = "CLIENT";
+    public static final String CLIENT_ID="ClientId";
+    public static final String USER_ID = "UserId";
+    public static final String JOIND_DATE = "JoinDate";
+    public static final String CLIENT_GOAL_ID = "ClientGoalId";
+    public static final String LIFESTYLE_ID = "LifeStyleId";
+    public static final String TRAINER_ID = "TrainderId";
+    public static final String GYM_ID="GymId";
+    public static final String HEALTH_CONDITION_ID="HealthConditionId";
+
+    //Create - Goals TABLE
+
+    public static final String TABLE_GOALS = "GOALS";
+    public static final String GOALS_ID="GoalsId";
+    public static final String GOALS_NAME = "GoalsName";
+    public static final String GOALS_DESC = "GoalsDesc";
+    public static final String GOALS_DURATION = "GoalsDuration";
+    public static final String GOALS_TARGET = "GoalsTarget";
+    public static final String GOALS_UOM = "UnitOfMeasure";
+
+    //Create - Health Condition
+    public static final String TABLE_HEALTH_CONDITION = "HEALTH_CONDITION";
+    public static final String HC_ID="HealthConditionId";
+    public static final String HC_NAME = "HealthConditionName";
+    public static final String HC_CHRONIC = "Chronic";
+    public static final String HC_DESC = "HealthConditionDesc";
+    public static final String HC_RESTRICTIONS = "Restriction";
+
+    //Create - LifeStyle
+    public static final String TABLE_LIFESTYLE = "LIFESTYLE";
+    public static final String LS_ID="LifestyleId";
+    public static final String LS_TYPEOFWORK = "TypeOfWork";
+    public static final String LS_FOOD_HABITS = "FoodHabits";
+    public static final String LS_SLEEPING_HABITS = "SleepingHabits";
+    public static final String LS_SMOKING = "Smoking";
+    public static final String LS_DRINKING = "Drinking";
+
+    //Create - Measures
+    public static final String TABLE_MEMBERSHIP = "MEMBERSHIP";
+    public static final String MEMBERSHIP_ID="MembershipId";
+    public static final String MEMBERSHIP_DESC = "MembershipDesc";
+    public static final String MEMBERSHIP_COST = "MembershipCost";
 
 
+    //Create - Measures
+    public static final String TABLE_CLIENT_MEMBERSHIP = "CLIENT_MEMBERSHIP";
+    public static final String CLIENT_MEMBERSHIP_ID="ClientMembershipId";
+    //public static final String MEMBERSHIP_DESC = "MembershipDesc";
+    public static final String ACTIVE_MEMBERSHIP = "ActiveMembership";
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null,1);
@@ -63,7 +114,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String Create_FitnessMeasures_Table = "CREATE TABLE " +
                 TABLE_NAME + "("
-                + COL_1 + " INTEGER PRIMARY KEY," + COL_2 + " TEXT" + ")";
+                + FM_ID + " INTEGER PRIMARY KEY," + FM_MEASURE_NAME + " TEXT" + ")";
         db.execSQL(Create_FitnessMeasures_Table);
         System.out.println("Fitness Measure :: TABLE CREATED");
 
@@ -78,8 +129,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String text1="subha";
 
 
-        String Create_user = "CREATE TABLE" + TABLE_NAME3 + "(" + COL_ID + "INTEGER PRIMARY KEY," + COL_Name + " TEXT,"
-                +COL_password+ " TEXT," +COL_DOB+ " TEXT," +COL_Phone+ " TEXT," +COL_Email+ " TEXT" + ")";
+        String Create_user = "CREATE TABLE" + TABLE_NAME3 + "(" + COL_ID + "INTEGER PRIMARY KEY,"
+               // + COL_Name + " TEXT,"
+               // +COL_password+ " TEXT,"
+                +COL_DOB+ " TEXT," +COL_Phone+ " TEXT," +COL_Email+ " TEXT" + ")";
         db.execSQL(Create_user);
         System.out.println("USER : TABLE Created");
 
@@ -94,7 +147,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //db.insert(TABLE_NAME2, null, values);
 
         for(int i =0; i<alUnameList.size(); i++){
-            userNameList.put(COL_2, alUnameList.get(i));
+            userNameList.put(FM_ID, alUnameList.get(i));
             db.insert(TABLE_NAME, null, userNameList);
         }
 
@@ -120,7 +173,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         ContentValues contentValues = new ContentValues();
         for(int i =0; i<alValList.size(); i++){
-            contentValues.put(COL_2, alValList.get(i));
+            contentValues.put(FM_MEASURE_NAME, alValList.get(i));
             db.insert(TABLE_NAME, null, contentValues);
         }
 
@@ -134,6 +187,73 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + COLUMN4 + " TEXT" +")";
         db.execSQL(Create_SaveFitnessmeasure_Table);
         System.out.println("Save Fitness Measure :: TABLE CREATED");
+
+        String Create_Client_Table ="CREATE TABLE " +
+                TABLE_CLIENT+ "("
+                + CLIENT_ID + " INTEGER PRIMARY KEY," + USER_ID + " INTEGER,"
+                + JOIND_DATE + " TEXT,"
+                + CLIENT_GOAL_ID + " INTEGER,"
+                + LIFESTYLE_ID  + " INTEGER,"
+                + TRAINER_ID + " INTEGER,"
+                + GYM_ID + " INTEGER,"
+                + HEALTH_CONDITION_ID + " INTEGER" +")";
+        db.execSQL(Create_Client_Table);
+        System.out.println("Save CLient Measure :: TABLE CREATED");
+
+        String Create_Goals_Table ="CREATE TABLE " +
+                TABLE_GOALS+ "("
+                + GOALS_ID + " INTEGER PRIMARY KEY,"
+                + GOALS_NAME + " TEXT,"
+                + GOALS_DESC + " TEXT,"
+                + GOALS_DURATION  + " INTEGER,"
+                + GOALS_TARGET + " DOUBLE,"
+                + GOALS_UOM + " TEXT ) "
+                ;
+        db.execSQL(Create_Goals_Table);
+        System.out.println("Save Goals Measure :: TABLE CREATED");
+
+        String Create_HC_Table ="CREATE TABLE " +
+                TABLE_HEALTH_CONDITION+ "("
+                + HC_ID + " INTEGER PRIMARY KEY,"
+                + HC_NAME + " TEXT,"
+                + HC_CHRONIC + " TEXT,"
+                + HC_DESC  + " TEXT,"
+                + HC_RESTRICTIONS + " TEXT ) "
+                ;
+        db.execSQL(Create_HC_Table);
+        System.out.println("Save Health Condition Measure :: TABLE CREATED");
+
+        String Create_LS_Table ="CREATE TABLE " +
+                TABLE_LIFESTYLE+ "("
+                + LS_ID + " INTEGER PRIMARY KEY,"
+                + LS_TYPEOFWORK + " TEXT,"
+                + LS_FOOD_HABITS + " TEXT,"
+                + LS_SLEEPING_HABITS  + " TEXT,"
+                + LS_SMOKING  + " TEXT,"
+                + LS_DRINKING + " TEXT ) "
+                ;
+        db.execSQL(Create_LS_Table);
+        System.out.println("Save Lifestyle Measure :: TABLE CREATED");
+
+        String Create_MS_Table ="CREATE TABLE " +
+                TABLE_MEMBERSHIP+ "("
+                + MEMBERSHIP_ID + " INTEGER PRIMARY KEY,"
+                + MEMBERSHIP_DESC + " TEXT,"
+                + MEMBERSHIP_COST + " DOUBLE)"
+                ;
+        db.execSQL(Create_MS_Table);
+        System.out.println("Save Membership :: TABLE CREATED");
+
+        String Create_CLIENTMS_Table ="CREATE TABLE " +
+                TABLE_CLIENT_MEMBERSHIP+ "("
+                + CLIENT_MEMBERSHIP_ID + " INTEGER PRIMARY KEY,"
+                + MEMBERSHIP_ID + " INTEGER,"
+                + CLIENT_ID + " INTEGER,"
+                + ACTIVE_MEMBERSHIP + " TEXT)"
+                ;
+        db.execSQL(Create_CLIENTMS_Table);
+        System.out.println("Save Client Membership :: TABLE CREATED");
+
     }
 
 
@@ -165,7 +285,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public int fetchFitness_measureID(String fmString){
         String query = "Select FitnessMeasures_Id FROM " + DatabaseHelper.TABLE_NAME
                 + " WHERE "
-                + COL_2 + " =  \"" + fmString + "\" ";
+                + FM_MEASURE_NAME + " =  \"" + fmString + "\" ";
 
         System.out.println("SQL To fetch Fitness Measure : "
         + query);
@@ -180,9 +300,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public String fetchFitnessMeasureFromId(String fmString){
-        String query = "Select "+COL_2+" FROM " + TABLE_NAME
+        String query = "Select "+FM_MEASURE_NAME+" FROM " + TABLE_NAME
                 + " WHERE "
-                + COL_1 + " =  \"" + fmString + "\" ";
+                + FM_ID + " =  \"" + fmString + "\" ";
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
